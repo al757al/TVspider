@@ -1,7 +1,7 @@
 # TV_Spider
 服务端爬虫 T4，基于`Python 3`
 
-
+### [腾讯云函数版本](https://github.com/sec-an/TV_Spider/tree/scf)
 ### 安装及使用说明，请参考[Wiki](https://github.com/sec-an/TV_Spider/wiki)
 ### 爬虫失效及其它问题，请移步[Issues](https://github.com/sec-an/TV_Spider/issues)
 
