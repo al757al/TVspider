@@ -17,6 +17,7 @@ site_list = [
     "ddys",
     "dy555",
     "gitcafe",
+    "lezhutv",
     "libvio",
     "onelist",
     "smdyy",
