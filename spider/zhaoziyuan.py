@@ -46,8 +46,8 @@ def searchContent(key, token):
 
 def detailContent(url, token):
     try:
-        # if not token:
-        #     return []
+        if not token:
+            return []
         aliyun = re.compile("(https://www.aliyundrive.com/s/[^\"]+)")
         share_url = url.strip().split("$")[-1]
         if aliyun.search(share_url):
