@@ -154,8 +154,7 @@ def playerContent(ids, flag, token):
         allScript = BeautifulSoup(requests.get(url=url, headers=getHeaders(url)).text, "html.parser").select("script")
         for item in allScript:
             scContent = item.get_text().strip()
-            if scContent.startswith("var "
-                                    ""):
+            if scContent.startswith("var player_"):
                 player = json.loads(scContent[scContent.find('{'):scContent.rfind('}') + 1])
                 if player.get("from") in playerConfig:
                     pCfg = playerConfig.get(player.get("from"))
