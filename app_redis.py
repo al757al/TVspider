@@ -14,6 +14,7 @@ redis_config = {
     'CACHE_DEFAULT_TIMEOUT': 60 * 60 * 3
 }
 
+
 app = Flask(__name__)
 cors = CORS(app)
 cache = Cache(app=app, config=redis_config)
@@ -27,7 +28,7 @@ site_list = [
     "ddys",
     "dy555",
     "gitcafe",
-    "lezhu",
+    "lezhutv",
     "libvio",
     "onelist",
     "smdyy",
@@ -123,11 +124,19 @@ def vod():
 
         # 详情
         if ac and ids:
+            if len(ids.split('$')) < 2:
+                return jsonify({
+                    "list": [],
+                    "msg": "没找到数据解决办法\r\n俊版：设置中开启聚合模式\ntaka：长按海报进入聚搜"
+                })
             vodList = cache.get(f"detail__{ids}")
             if not vodList:
                 vodList = eval(f"{ids.split('$')[0]}.detailContent")(ids, ali_token)
                 if vodList:
                     cache.set(f"detail__{ids}", vodList, 60*20)
+                else:
+                    with open("error_detail.txt", "a") as f:
+                        f.write(f"{ids}\n")
             return jsonify({
                 "list": vodList
             })
@@ -135,6 +144,9 @@ def vod():
         # 播放
         if play and flag:
             playerContent = eval(f"{play.split('___')[0]}.playerContent")(play, flag, ali_token)
+            if len(playerContent) == 0:
+                with open("error_play.txt", "a") as f:
+                    f.write(f"{play}\n")
             return playerContent
 
         real_time_hotest = cache.get("real_time_hotest")
