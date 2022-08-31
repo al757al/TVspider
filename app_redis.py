@@ -84,7 +84,7 @@ def vod():
         sites_key = "".join(sorted(search_sites))
 
         # 分类数据
-        if filter == "true" and t:
+        if t:
             res = cache.get(f"{t}_{ext}_{pg}")
             if res:
                 return res
