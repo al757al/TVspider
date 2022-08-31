@@ -40,8 +40,7 @@ class ali_login(threading.Thread):
         self.token = token
 
     def run(self):
-        self._return = Aligo(name=self.token, refresh_token=self.token)
-        # self._return = Aligo(self.token, refresh_token=self.token)
+        self._return = Aligo(self.token, refresh_token=self.token)
 
     def join(self):
         super().join(timeout=3)
