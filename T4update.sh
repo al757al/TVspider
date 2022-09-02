@@ -12,35 +12,35 @@ else
  echo "文件夹已经存在"
 fi
 #下载源码
-wget --no-check-certificate -qO- "https://codeload.github.com/sec-an/TV_Spider/zip/refs/heads/main" -O '/workspace/TV-Spider/tmp/tvsp.zip'
-md5n=$(md5sum /workspace/TV-Spider/tmp/tvsp.zip | awk '{print $1}')
+wget --no-check-certificate -qO- "https://codeload.github.com/sec-an/TV_Spider/zip/refs/heads/main" -O '/tmp/tvsp.zip'
+md5n=$(md5sum /tmp/tvsp.zip | awk '{print $1}')
 #更新
-if [[ $md5n != $md5o && -s /workspace/TV-Spider/tmp/tvsp.zip ]];then
+if [[ $md5n != $md5o && -s /tmp/tvsp.zip ]];then
  echo 开始更新。。。
  docker stop $contname
  cudir=$(cd $(dirname $0); pwd)
  sed -i "s/$md5o/$md5n/g" $cudir/T4update.sh
  #解压缩
- mkdir /workspace/TV-Spider/tmp/tvsp/
- unzip /workspace/TV-Spider/tmp/tvsp.zip -d /workspace/TV-Spider/tmp/tvsp/  >/dev/null 2>&1
+ mkdir /tmp/tvsp/
+ unzip /tmp/tvsp.zip -d /tmp/tvsp/  >/dev/null 2>&1
 #文件变更，更新文件 
  echo 爬虫文件变更，正在更新文件开始更新。。。
  rm -rf $dkdir/app.py
  rm -rf $dkdir/utils/
  rm -rf $dkdir/spider/
  rm -rf $dkdir/json/
- cp  /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/app.py $dkdir/app.py
- cp -r /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/utils/ $dkdir/utils/
- cp -r /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/spider/ $dkdir/spider/
- cp -r /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/json/ $dkdir/json/
- rqmd5o=$(md5sum /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/requirements.txt | awk '{print $1}')
+ cp  /tmp/tvsp/TV_Spider-main/app.py $dkdir/app.py
+ cp -r /tmp/tvsp/TV_Spider-main/utils/ $dkdir/utils/
+ cp -r /tmp/tvsp/TV_Spider-main/spider/ $dkdir/spider/
+ cp -r /tmp/tvsp/TV_Spider-main/json/ $dkdir/json/
+ rqmd5o=$(md5sum /tmp/tvsp/TV_Spider-main/requirements.txt | awk '{print $1}')
  rqmd5n=$(md5sum $dkdir/requirements.txt | awk '{print $1}')
  #依赖变更，更新镜像
- if [[ $rqmd5n != $rqmd5o && -s /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/requirements.txt ]];then
+ if [[ $rqmd5n != $rqmd5o && -s /tmp/tvsp/TV_Spider-main/requirements.txt ]];then
   echo 依赖变更，正在更新镜像。。。
   rm -rf $dkdir/*
-  mv /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/requirements.txt $dkdir/requirements.txt
-  mv /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/dockerfile $dkdir/dockerfile
+  mv /tmp/tvsp/TV_Spider-main/requirements.txt $dkdir/requirements.txt
+  mv /tmp/tvsp/TV_Spider-main/dockerfile $dkdir/dockerfile
   echo "">>$dkdir/dockerfile
   echo $cmd >>$dkdir/dockerfile
   docker rm $contname
@@ -48,21 +48,21 @@ if [[ $md5n != $md5o && -s /workspace/TV-Spider/tmp/tvsp.zip ]];then
   cd $dkdir
   docker image build -t $imgtag .
   cd $cudir
-  mv /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/app.py $dkdir/app.py
-  mv /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/utils/ $dkdir/utils/
-  mv /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/spider/ $dkdir/spider/
-  mv /workspace/TV-Spider/tmp/tvsp/TV_Spider-main/json/ $dkdir/json/
+  mv /tmp/tvsp/TV_Spider-main/app.py $dkdir/app.py
+  mv /tmp/tvsp/TV_Spider-main/utils/ $dkdir/utils/
+  mv /tmp/tvsp/TV_Spider-main/spider/ $dkdir/spider/
+  mv /tmp/tvsp/TV_Spider-main/json/ $dkdir/json/
   #运行DOCKER
   docker run --restart=always --name $contname --net="host" -v $dkdir:/TV $imgtag 2>&1 &
  fi
 #删除临时文件
- rm -rf /workspace/TV-Spider/tmp/tvsp/
+ rm -rf /tmp/tvsp/
 #重启DOCKER
  docker start $contname
  echo 更新完成。
 else
  echo 无需更新。
 fi
-rm -rf /workspace/TV-Spider/tmp/tvsp.zip
+rm -rf /tmp/tvsp.zip
 
 exit
